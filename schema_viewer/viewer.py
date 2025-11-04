@@ -47,7 +47,7 @@ def display_tree_view(schema, name="JSON Schema"):
                         branch = tree.add(f"[bold red]{k}[/bold red]: {v}")
                         continue
                     elif k == 'enum':
-                        branch = tree.add(f"[yellow]{k}[/yellow]: {', '.join(v)}")
+                        branch = tree.add(f"[yellow]{k}[/yellow]: {', '.join(map(str, v))}")
                         continue
                     else:
                         branch = tree.add(f"[green]{k}[/green]")
@@ -92,7 +92,7 @@ def display_properties_table(schema):
     for prop_name, prop_info in schema['properties'].items():
         prop_type = prop_info.get('type', 'any')
         if 'enum' in prop_info:
-            prop_type += f"\nenum: {', '.join(prop_info['enum'][:3])}"
+            prop_type += f"\nenum: {', '.join(map(str, prop_info['enum'][:3]))}"
             if len(prop_info['enum']) > 3:
                 prop_type += "..."
 
@@ -151,7 +151,7 @@ def find_json_schemas(base_dir='docs'):
 def display_schema_menu(schemas):
     """Display menu of available schemas and let user choose"""
     if not schemas:
-        console.print("[bold red]No JSON schemas found in docs directory[/bold red]")
+        console.print("[bold red]No JSON schemas found[/bold red]")
         return None
 
     console.print("\n[bold cyan]Available JSON Schemas:[/bold cyan]\n")

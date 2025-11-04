@@ -8,7 +8,7 @@ A beautiful terminal viewer for JSON schemas using the [Rich](https://github.com
 - 🌳 **Tree View** - Hierarchical structure visualization
 - 📝 **Examples** - Formatted example data in panels
 - 🎨 **Syntax Highlighting** - Beautiful JSON rendering
-- 🔍 **Auto-discovery** - Automatically finds all JSON schemas in your docs
+- 🔍 **Auto-discovery** - Automatically finds all JSON schemas in docs directory
 - 🖥️ **Interactive Mode** - Choose from a list of available schemas
 - ⚡ **CLI Support** - Direct access via command-line arguments
 
