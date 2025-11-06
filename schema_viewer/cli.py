@@ -13,6 +13,7 @@ from .viewer import (
     display_pretty_json,
     load_schema
 )
+from .tui import run_tui
 
 console = Console()
 
@@ -37,6 +38,8 @@ def show_help():
 
 [bold]Options:[/bold]
   -d, --dir <path>    Search directory (default: docs)
+  --tui               Use interactive TUI mode (default)
+  --no-tui            Use classic view mode
   --full              Show full JSON with syntax highlighting
   --help              Show this help message
 """
@@ -49,11 +52,20 @@ def main():
     # Parse command line arguments
     args = sys.argv[1:]
     search_dir = 'docs'
+    use_tui = True  # Default to TUI mode
 
     # Check for help
     if '--help' in args or '-h' in args:
         show_help()
         return 0
+
+    # Check for TUI mode flags
+    if '--no-tui' in args:
+        use_tui = False
+        args.remove('--no-tui')
+    if '--tui' in args:
+        use_tui = True
+        args.remove('--tui')
 
     # Check for custom directory
     if '--dir' in args or '-d' in args:
@@ -98,7 +110,11 @@ def main():
         # Select by number
         choice = int(args[0])
         if 1 <= choice <= len(schemas):
-            display_schema(schemas[choice - 1])
+            schema_file = str(schemas[choice - 1])
+            if use_tui:
+                run_tui(schema_file)
+            else:
+                display_schema(schema_file)
         else:
             console.print(f"[bold red]Invalid choice. Please select 1-{len(schemas)}[/bold red]")
             return 1
@@ -108,7 +124,10 @@ def main():
         schema_file = args[0]
         if Path(schema_file).exists():
             try:
-                display_schema(schema_file)
+                if use_tui:
+                    run_tui(schema_file)
+                else:
+                    display_schema(schema_file)
             except json.JSONDecodeError as e:
                 console.print(f"[bold red]Error:[/bold red] Invalid JSON: {e}")
                 return 1
@@ -119,7 +138,10 @@ def main():
         # Interactive mode
         selected_schema = display_schema_menu(schemas)
         if selected_schema:
-            display_schema(selected_schema)
+            if use_tui:
+                run_tui(str(selected_schema))
+            else:
+                display_schema(selected_schema)
 
     return 0
 
