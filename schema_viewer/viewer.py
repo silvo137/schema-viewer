@@ -82,26 +82,25 @@ def display_properties_table(schema):
         return
 
     table = Table(show_header=True, header_style="bold magenta", border_style="blue")
-    table.add_column("Property", style="cyan", width=25)
-    table.add_column("Type", style="green", width=15)
+    table.add_column("Property", style="cyan", width=25, no_wrap=False)
+    table.add_column("Type", style="green", width=30, no_wrap=False)
     table.add_column("Required", style="red", width=10, justify="center")
-    table.add_column("Description", style="white", width=60)
+    table.add_column("Description", style="white", no_wrap=False)
 
     required = schema.get('required', [])
 
     for prop_name, prop_info in schema['properties'].items():
         prop_type = prop_info.get('type', 'any')
         if 'enum' in prop_info:
-            prop_type += f"\nenum: {', '.join(map(str, prop_info['enum'][:3]))}"
-            if len(prop_info['enum']) > 3:
-                prop_type += "..."
+            # Show all enum values
+            prop_type += f"\nenum: {', '.join(map(str, prop_info['enum']))}"
 
         is_required = "✓" if prop_name in required else "✗"
         description = prop_info.get('description', '')
 
         # Truncate long descriptions
-        if len(description) > 100:
-            description = description[:97] + "..."
+        if len(description) > 3000:
+            description = description[:2997] + "..."
 
         table.add_row(prop_name, prop_type, is_required, description)
 
